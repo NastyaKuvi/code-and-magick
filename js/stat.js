@@ -36,7 +36,8 @@ window.renderStatistics = function (ctx, names, times) {
       ctx.fillStyle = 'rgba(0, 0, 255, ' + Math.random(0, 1) + ')';
     }
     var currentX = mainX + columnDist * (i + 1) + columnWidth * i;
-    ctx.fillRect(currentX, 80 + histogramHeight - times[i] * step, columnWidth, times[i] * step);
+    var currentTime = Math.floor(times[i]) * step;
+    ctx.fillRect(currentX, 80 + histogramHeight - currentTime, columnWidth, currentTime);
     ctx.fillText(names[i], currentX, 270);
   }
 };
