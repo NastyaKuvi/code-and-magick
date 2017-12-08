@@ -10,8 +10,7 @@
   },
   "homepage": "https://github.com/NastyaKuvi/code-and-magick",
   "devDependencies": {
-    "eslint": "3.9.0",
-    "eslint-config-htmlacademy": "0.2.x"
+    "eslint": "3.9.0"
   },
   "license": "MIT",
   "dependencies": {},
