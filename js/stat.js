@@ -1,50 +1,53 @@
 'use strict';
 
-window.renderStatistics = function (ctx, names, times) {
-  var mainX = 100;
-  var mainY = 10;
-  var mainWidth = 420;
-  var mainHeight = 270;
-  paintRectangle(ctx, mainX + 10, mainY + 10, mainWidth, mainHeight, 'rgba(0, 0, 0, 0.7)');
-  paintRectangle(ctx, mainX, mainY, mainWidth, mainHeight, 'rgba(255, 255, 255, 1)');
+var MAIN_WIDTH = 420;
+var MAIN_HEIGHT = 270;
+var MAIN_X = 100;
+var MAIN_Y = 10;
+var HISTOGRAM_HEIGHT = 150;
 
-  ctx.font = 'PT Mono 16px';
-  ctx.textBaseline = 'bottom';
-  paintText(ctx, 'Ура, вы победили!', mainX + 20, mainY + 35);
-  paintText(ctx, 'Список результатов:', mainX + 20, mainY + 55);
-
-  for (var i = 0; i < times.length; i++) {
-    times[i] = Math.round(times[i]);
-  }
-
-  var histogramHeight = 150;
-  var columnWidth = 40;
-  var columnDist = 50;
-  var maxTime = Math.max.apply(null, times);
-  var step = histogramHeight / maxTime;
-
-  for (i = 0; i < times.length; i++) {
-    var currentColor = names[i] === 'Вы' ?
-                         'rgba(255, 0, 0, 1)' :
-                         'rgba(0, 0, 255, ' + (Math.random() + 0.1) + ')';
-    var currentX = mainX + columnDist * (i + 1) + columnWidth * i;
-    var currentTime = times[i] * step;
-    var currentY = mainY + 80 + histogramHeight - currentTime;
-    paintText(ctx, times[i], currentX, currentY);
-    paintRectangle(ctx, currentX, currentY, columnWidth, currentTime, currentColor);
-    paintText(ctx, names[i], currentX, mainHeight);
-  }
+var renderRectangle = function (ctx, x, y, width, height, color) {
+  ctx.fillStyle = color;
+  ctx.fillRect(x, y, width, height);
 };
 
-function paintRectangle(ctx, x, y, w, h, color) {
-  ctx.fillStyle = color;
-  ctx.fillRect(x, y, w, h);
-}
-
-function paintText(ctx, text, x, y, color) {
+var renderText = function (ctx, text, x, y, color) {
   if (typeof color === 'undefined') {
     color = 'rgba(0, 0, 0, 1)';
   }
   ctx.fillStyle = color;
   ctx.fillText(text, x, y);
-}
+};
+
+var renderGamerResult = function (ctx, i, name, time, step) {
+  var COLUMN_WIDTH = 40;
+  var COLUMN_DIST = 50;
+
+  var currentColor = name === 'Вы' ?
+                      'rgba(255, 0, 0, 1)' :
+                      'rgba(0, 0, 255, ' + (Math.random() + 0.1) + ')';
+  var currentX = MAIN_X + COLUMN_DIST * (i + 1) + COLUMN_WIDTH * i;
+  var currentTime = time * step;
+  var currentY = MAIN_Y + 80 + HISTOGRAM_HEIGHT - currentTime;
+  renderText(ctx, time, currentX, currentY);
+  renderRectangle(ctx, currentX, currentY, COLUMN_WIDTH, currentTime, currentColor);
+  renderText(ctx, name, currentX, MAIN_HEIGHT);
+};
+
+window.renderStatistics = function (ctx, names, times) {
+
+  var maxTime = Math.max.apply(null, times);
+  var step = HISTOGRAM_HEIGHT / maxTime;
+
+  renderRectangle(ctx, MAIN_X + 10, MAIN_Y + 10, MAIN_WIDTH, MAIN_HEIGHT, 'rgba(0, 0, 0, 0.7)');
+  renderRectangle(ctx, MAIN_X, MAIN_Y, MAIN_WIDTH, MAIN_HEIGHT, 'rgba(255, 255, 255, 1)');
+
+  ctx.font = 'PT Mono 16px';
+  ctx.textBaseline = 'bottom';
+  renderText(ctx, 'Ура, вы победили!', MAIN_X + 20, MAIN_Y + 35);
+  renderText(ctx, 'Список результатов:', MAIN_X + 20, MAIN_Y + 55);
+
+  for (var i = 0; i < times.length; i++) {
+    renderGamerResult(ctx, i, names[i], Math.round(times[i]), step);
+  }
+};
