@@ -38,8 +38,9 @@ var renderWizard = function (wizard) {
 var wizards = createWizards(4);
 
 var fragment = document.createDocumentFragment();
-for (var i = 0; i < wizards.length; i++) {
-  fragment.appendChild(renderWizard(wizards[i]));
-}
+wizards.forEach(function (wizard) {
+  fragment.appendChild(renderWizard(wizard));
+});
+
 setupSimilar.querySelector('.setup-similar-list').appendChild(fragment);
 setupSimilar.classList.remove('hidden');

@@ -729,7 +729,6 @@ input[type=radio]:checked + .review-mark-label {
 
 .setup-similar-item {
   max-width: 150px;
-  overflow: hidden;
 }
 
 .setup-similar-label {
