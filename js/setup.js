@@ -5,6 +5,7 @@ var DataMap = {
   SECOND_NAMES: ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'],
   COAT_COLORS: ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'],
   EYES_COLORS: ['black', 'red', 'blue', 'yellow', 'green'],
+  FIRE_COLORS: ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848']
 };
 
 var KeyMap = {
@@ -21,6 +22,10 @@ var setupInput = setupDialog.querySelector('.setup-user-name');
 var setupSubmit = setupDialog.querySelector('.setup-submit');
 var setupOpen = document.querySelector('.setup-open');
 var setupOpenIcon = setupOpen.querySelector('.setup-open-icon');
+var setupPlayer = setupDialog.querySelector('.setup-player');
+var setupWizardCoat = setupPlayer.querySelector('.wizard-coat');
+var setupWizardEyes = setupPlayer.querySelector('.wizard-eyes');
+var setupFireBall = setupDialog.querySelector('.setup-fireball-wrap');
 var wizardTemplate = document.querySelector('#similar-wizard-template').content;
 
 var getRandomNumder = function (min, max) {
@@ -52,6 +57,14 @@ var showSetupDialog = function () {
 var hideSetupDialog = function () {
     setupDialog.classList.add(HIDDEN);
     document.removeEventListener('keydown', setupDialogEscKeyDownHandler);
+};
+
+var submitSetupDialog = function() {
+  var valid = setupInput.validity.valid;
+  if(valid) {
+    hideSetupDialog();
+  }
+  return valid;
 };
 
 var setupDialogEscKeyDownHandler = function (evt) {
@@ -95,14 +108,29 @@ setupInput.addEventListener('keydown', function (evt) {
 });
 
 setupSubmit.addEventListener('click', function(evt) {
-  hideSetupDialog();
+  if(!submitSetupDialog()) {
+    evt.stopPropagation();
+  }
 });
-
 
 setupSubmit.addEventListener('keydown', function(evt) {
   if (evt.keyCode === KeyMap.ENTER_CODE) {
-    hideSetupDialog();
+    if(!submitSetupDialog()) {
+      evt.stopPropagation();
+    }
   }
+});
+
+setupWizardCoat.addEventListener('click', function() {
+  setupWizardCoat.style.fill = getRandomItem(DataMap.COAT_COLORS);
+});
+
+setupWizardEyes.addEventListener('click', function() {
+  setupWizardEyes.style.fill = getRandomItem(DataMap.EYES_COLORS);
+});
+
+setupFireBall.addEventListener('click', function() {
+  setupFireBall.style.background = getRandomItem(DataMap.FIRE_COLORS);
 });
 
 var wizards = createWizards(4);
