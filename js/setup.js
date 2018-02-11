@@ -28,6 +28,12 @@ var setupWizardEyes = setupPlayer.querySelector('.wizard-eyes');
 var setupFireBall = setupDialog.querySelector('.setup-fireball-wrap');
 var wizardTemplate = document.querySelector('#similar-wizard-template').content;
 
+var wizardColors = {
+  coat: DataMap.COAT_COLORS[0],
+  eyes: DataMap.EYES_COLORS[0],
+  fire: DataMap.FIRE_COLORS[0],
+};
+
 var getRandomNumder = function (min, max) {
   return Math.floor(min + Math.random() * (max - min));
 };
@@ -49,20 +55,33 @@ var createWizards = function (count) {
   return resultWizards;
 };
 
+var resetMainWisardColors = function () {
+  setupWizardCoat.style.fill = wizardColors.coat;
+  setupWizardEyes.style.fill = wizardColors.eyes;
+  setupFireBall.style.background = wizardColors.fire;
+};
+
+var saveMainWisardColors = function () {
+  wizardColors.coat = setupWizardCoat.style.fill;
+  wizardColors.eyes = setupWizardEyes.style.fill;
+  wizardColors.fire = setupFireBall.style.background;
+};
+
 var showSetupDialog = function () {
   setupDialog.classList.remove(HIDDEN);
   document.addEventListener('keydown', setupDialogEscKeyDownHandler);
 };
 
 var hideSetupDialog = function () {
-    setupDialog.classList.add(HIDDEN);
-    document.removeEventListener('keydown', setupDialogEscKeyDownHandler);
+  setupDialog.classList.add(HIDDEN);
+  document.removeEventListener('keydown', setupDialogEscKeyDownHandler);
 };
 
-var submitSetupDialog = function() {
+var submitSetupDialog = function () {
   var valid = setupInput.validity.valid;
-  if(valid) {
+  if (valid) {
     hideSetupDialog();
+    saveMainWisardColors();
   }
   return valid;
 };
@@ -70,6 +89,7 @@ var submitSetupDialog = function() {
 var setupDialogEscKeyDownHandler = function (evt) {
   if (evt.keyCode === KeyMap.ESC_CODE) {
     hideSetupDialog();
+    resetMainWisardColors();
   }
 };
 
@@ -87,11 +107,13 @@ setupOpen.addEventListener('click', function () {
 
 setupClose.addEventListener('click', function () {
   hideSetupDialog();
+  resetMainWisardColors();
 });
 
 setupClose.addEventListener('keydown', function (evt) {
   if (evt.keyCode === KeyMap.ENTER_CODE) {
     hideSetupDialog();
+    resetMainWisardColors();
   }
 });
 
@@ -107,32 +129,37 @@ setupInput.addEventListener('keydown', function (evt) {
   }
 });
 
-setupSubmit.addEventListener('click', function(evt) {
-  if(!submitSetupDialog()) {
+setupSubmit.addEventListener('click', function (evt) {
+  if (!submitSetupDialog()) {
     evt.stopPropagation();
+  } else {
+    evt.preventDefault();
   }
 });
 
-setupSubmit.addEventListener('keydown', function(evt) {
+setupSubmit.addEventListener('keydown', function (evt) {
   if (evt.keyCode === KeyMap.ENTER_CODE) {
-    if(!submitSetupDialog()) {
+    if (!submitSetupDialog()) {
       evt.stopPropagation();
+    } else {
+      evt.preventDefault();
     }
   }
 });
 
-setupWizardCoat.addEventListener('click', function() {
+setupWizardCoat.addEventListener('click', function () {
   setupWizardCoat.style.fill = getRandomItem(DataMap.COAT_COLORS);
 });
 
-setupWizardEyes.addEventListener('click', function() {
+setupWizardEyes.addEventListener('click', function () {
   setupWizardEyes.style.fill = getRandomItem(DataMap.EYES_COLORS);
 });
 
-setupFireBall.addEventListener('click', function() {
+setupFireBall.addEventListener('click', function () {
   setupFireBall.style.background = getRandomItem(DataMap.FIRE_COLORS);
 });
 
+resetMainWisardColors();
 var wizards = createWizards(4);
 
 var fragment = document.createDocumentFragment();
